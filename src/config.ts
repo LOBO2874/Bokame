@@ -142,7 +142,7 @@ export const siteConfig: SiteConfig = {
 
 		carousel: {
 			enable: true, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
-			interval: 3, // 轮播间隔时间（秒）
+			interval: 5, // 轮播间隔时间（秒）
 		},
 
 		waves: {
@@ -151,18 +151,16 @@ export const siteConfig: SiteConfig = {
 			mobileDisable: false, // 移动端禁用
 		},
 
-		// PicFlow API支持(智能图片API)
+		// 图片API支持
 		imageApi: {
-			enable: false, // 启用图片API
-			url: "http://domain.com/api_v2.php?format=text&count=4", // API地址，返回每行一个图片链接的文本
+			enable: true, // 启用外部API获取图片
+			url: "https://api.lolicon.app/setu/v2?size=original&num=5&r18=0", // API地址，返回JSON格式的图片列表
 		},
-		// 这里需要使用PicFlow API的Text返回类型,所以我们需要format=text参数
-		// 项目地址:https://github.com/matsuzaka-yuki/PicFlow-API
-		// 请自行搭建API
+		// 这里支持返回纯文本行或 JSON 格式结果，项目会自动解析常见的图片字段
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "わたしの部屋", // 主页横幅主标题
+			title: "我不是バカの小屋", // 主页横幅主标题
 
 			subtitle: [
 				"特別なことはないけど、君がいると十分です",
@@ -279,7 +277,7 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/LyraVoid/Mizuki",
+					url: "https://github.com/LOBO2874/Bokame",
 					external: true,
 					icon: "fa7-brands:github",
 				},
@@ -305,7 +303,7 @@ export const navBarConfig: NavBarConfig = {
 					name: "Gallery",
 					url: "/albums/",
 					icon: "material-symbols:photo-library",
-				}
+				},
 			],
 		},
 		{
@@ -336,7 +334,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/avatar.webp", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
+	avatar: "https://github.com/LOBO2874.png", // GitHub用户头像
 	name: "我不是バカ",
 	bio: "世界はそんなに大きいので、行ってみたいです",
 	typewriter: {
@@ -352,7 +350,7 @@ export const profileConfig: ProfileConfig = {
 		{
 			name: "GitHub",
 			icon: "fa7-brands:github",
-			url: "https://github.com/matsuzaka-yuki",
+			url: "https://github.com/LOBO2874",
 		},
 	],
 };

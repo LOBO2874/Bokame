@@ -204,10 +204,44 @@ export async function getBannerImages(
 
 	// 如果启用了图片API，获取API图片
 	if (siteConfig.banner.imageApi?.enable && siteConfig.banner.imageApi?.url) {
+		const parseApiImages = (value: unknown): string[] => {
+			if (typeof value === "string") {
+				return [value].filter((item) => item.trim());
+			}
+			if (Array.isArray(value)) {
+				return value.flatMap((item) =>
+					typeof item === "string" ? [item] : parseApiImages(item),
+				);
+			}
+			if (typeof value === "object" && value !== null) {
+				const obj = value as Record<string, unknown>;
+				if (Array.isArray(obj.files)) return parseApiImages(obj.files);
+				if (Array.isArray(obj.urls)) return parseApiImages(obj.urls);
+				if (Array.isArray(obj.images))
+					return parseApiImages(obj.images);
+				if (Array.isArray(obj.data))
+					return obj.data.flatMap((item) => parseApiImages(item));
+				if (typeof obj.url === "string") return [obj.url];
+				if (typeof obj.image_url === "string") return [obj.image_url];
+				if (typeof obj.original === "string") return [obj.original];
+				if (obj.image_urls && typeof obj.image_urls === "object") {
+					return parseApiImages(obj.image_urls);
+				}
+			}
+			return [];
+		};
+
 		try {
 			const response = await fetch(siteConfig.banner.imageApi.url);
 			const text = await response.text();
-			const apiImages = text.split("\n").filter((line) => line.trim());
+			let apiImages = [] as string[];
+
+			try {
+				const json = JSON.parse(text);
+				apiImages = parseApiImages(json);
+			} catch {
+				apiImages = text.split("\n").filter((line) => line.trim());
+			}
 
 			if (apiImages.length > 0) {
 				bannerSrc = apiImages;

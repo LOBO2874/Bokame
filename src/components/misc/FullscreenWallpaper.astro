@@ -15,10 +15,41 @@ const getImageSources = async () => {
 
 	// API 图片逻辑
 	if (siteConfig.banner.imageApi?.enable && siteConfig.banner.imageApi?.url) {
+		const parseApiImages = (value: unknown): string[] => {
+			if (typeof value === "string") {
+				return [value].filter((item) => item.trim());
+			}
+			if (Array.isArray(value)) {
+				return value.flatMap((item) => (typeof item === "string" ? [item] : parseApiImages(item)));
+			}
+			if (typeof value === "object" && value !== null) {
+				const payload = value as Record<string, unknown>;
+				if (Array.isArray(payload.files)) return parseApiImages(payload.files);
+				if (Array.isArray(payload.urls)) return parseApiImages(payload.urls);
+				if (Array.isArray(payload.images)) return parseApiImages(payload.images);
+				if (Array.isArray(payload.data)) return payload.data.flatMap((item) => parseApiImages(item));
+				if (typeof payload.url === "string") return [payload.url];
+				if (typeof payload.image_url === "string") return [payload.image_url];
+				if (typeof payload.original === "string") return [payload.original];
+				if (payload.image_urls && typeof payload.image_urls === "object") {
+					return parseApiImages(payload.image_urls);
+				}
+			}
+			return [];
+		};
+
 		try {
 			const response = await fetch(siteConfig.banner.imageApi.url);
 			const text = await response.text();
-			const apiImages = text.split("\n").filter((line) => line.trim());
+			let apiImages: string[] = [];
+
+			try {
+				const json = JSON.parse(text);
+				apiImages = parseApiImages(json);
+			} catch {
+				apiImages = text.split("\n").filter((line) => line.trim());
+			}
+
 			if (apiImages.length > 0) {
 				return { desktop: apiImages, mobile: apiImages };
 			}
