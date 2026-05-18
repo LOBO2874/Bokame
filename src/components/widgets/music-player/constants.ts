@@ -14,6 +14,14 @@ export const LOCAL_PLAYLIST: Song[] = [
 		duration: 0,
 	},
 	{
+		id: 5,
+		title: "Dear Moments",
+		artist: "赤尾ひかる",
+		cover: "/assets/music/cover/local-example.jpg",
+		url: "/assets/music/url/local-example.mp3",
+		duration: 0,
+	},
+	{
 		id: 2,
 		title: "ひとり上手",
 		artist: "Kaya",
